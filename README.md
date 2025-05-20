@@ -25,6 +25,13 @@ python webapp/server.py
 
 4. Open your browser at `http://localhost:5000` and upload an image to search.
 
+Alternatively you can run the helper script which starts the server and
+opens your default browser automatically:
+
+```bash
+python run_webapp.py
+```
+
 ## Limitations
 
 - This project uses an external API for image search. You may need to sign up for a key. Free tiers may have usage limits.
