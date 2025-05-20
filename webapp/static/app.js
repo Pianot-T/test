@@ -1,11 +1,28 @@
 const form = document.getElementById('upload-form');
 const tableBody = document.querySelector('#results-table tbody');
+const fileInput = document.getElementById('image-input');
+const uploadedPreview = document.getElementById('uploaded-preview');
+const uploadedImage = document.getElementById('uploaded-image');
+
+fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            uploadedImage.src = e.target.result;
+            uploadedPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        uploadedImage.src = '';
+        uploadedPreview.style.display = 'none';
+    }
+});
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
     tableBody.innerHTML = '';
 
-    const fileInput = document.getElementById('image-input');
     const formData = new FormData();
     formData.append('image', fileInput.files[0]);
 
