@@ -6,16 +6,14 @@ from io import BytesIO
 
 app = Flask(__name__)
 
-# Placeholder function to call an external reverse image search API
-# You need to supply your own API key and endpoint.
-# Example uses Bing Visual Search which requires a key.
+# -- Image search helpers -----------------------------------------------------
 
-def search_image(image_bytes):
-    """Call external API to search for similar images."""
+def search_image_bing(image_bytes):
+    """Search similar images using Bing Visual Search."""
     api_key = os.environ.get('BING_VISUAL_SEARCH_KEY')
     endpoint = os.environ.get('BING_VISUAL_SEARCH_ENDPOINT')
     if not api_key or not endpoint:
-        return []  # API not configured
+        return []
 
     headers = {
         'Ocp-Apim-Subscription-Key': api_key,
@@ -36,6 +34,42 @@ def search_image(image_bytes):
                         })
         return results
     return []
+
+
+def search_image_serpapi(image_bytes):
+    """Search similar images using SerpApi (Google Lens)."""
+    api_key = os.environ.get('SERPAPI_KEY')
+    endpoint = os.environ.get('SERPAPI_ENDPOINT', 'https://serpapi.com/search')
+    if not api_key:
+        return []
+
+    # SerpApi expects multipart form with image data
+    files = {
+        'encoded_image': ('image.jpg', image_bytes)
+    }
+    data = {
+        'engine': 'google_lens',
+        'api_key': api_key,
+        'hl': 'fr'
+    }
+    response = requests.post(endpoint, data=data, files=files)
+    if response.status_code == 200:
+        payload = response.json()
+        results = []
+        for match in payload.get('visual_matches', []):
+            results.append({
+                'url': match.get('link'),
+                'thumbnail': match.get('thumbnail')
+            })
+        return results
+    return []
+
+
+def search_image(image_bytes):
+    """Call the configured external API to search for similar images."""
+    if os.environ.get('SERPAPI_KEY'):
+        return search_image_serpapi(image_bytes)
+    return search_image_bing(image_bytes)
 
 @app.route('/')
 def index():
