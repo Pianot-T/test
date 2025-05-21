@@ -58,6 +58,22 @@ img.preview {
     width: 100px;
 }
 
+.api-status {
+    text-align: center;
+    color: white;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+
+.api-status.active {
+    background-color: #4CAF50;
+}
+
+.api-status.inactive {
+    background-color: #f44336;
+}
+
 .uploaded-preview {
     text-align: center;
     margin-bottom: 1rem;

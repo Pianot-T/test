@@ -23,6 +23,15 @@ def get_setting(name, default=None):
 
 app = Flask(__name__)
 
+
+def api_is_active():
+    """Return True if at least one API key is configured."""
+    if get_setting('SERPAPI_KEY'):
+        return True
+    if get_setting('BING_VISUAL_SEARCH_KEY') and get_setting('BING_VISUAL_SEARCH_ENDPOINT'):
+        return True
+    return False
+
 # -- Image search helpers -----------------------------------------------------
 
 def search_image_bing(image_bytes):
@@ -90,7 +99,7 @@ def search_image(image_bytes):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', api_active=api_is_active())
 
 @app.route('/search', methods=['POST'])
 def search():
