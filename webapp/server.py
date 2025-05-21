@@ -3,6 +3,23 @@ from flask import Flask, render_template, request, jsonify
 from PIL import Image
 import requests
 from io import BytesIO
+from dotenv import load_dotenv
+
+try:
+    import config  # local configuration (not tracked in git)
+except ImportError:  # pragma: no cover - config is optional
+    config = None
+
+load_dotenv()
+
+def get_setting(name, default=None):
+    """Return configuration from environment or optional config module."""
+    value = os.environ.get(name)
+    if value:
+        return value
+    if config and hasattr(config, name):
+        return getattr(config, name)
+    return default
 
 app = Flask(__name__)
 
@@ -10,8 +27,8 @@ app = Flask(__name__)
 
 def search_image_bing(image_bytes):
     """Search similar images using Bing Visual Search."""
-    api_key = os.environ.get('BING_VISUAL_SEARCH_KEY')
-    endpoint = os.environ.get('BING_VISUAL_SEARCH_ENDPOINT')
+    api_key = get_setting('BING_VISUAL_SEARCH_KEY')
+    endpoint = get_setting('BING_VISUAL_SEARCH_ENDPOINT')
     if not api_key or not endpoint:
         return []
 
@@ -38,8 +55,8 @@ def search_image_bing(image_bytes):
 
 def search_image_serpapi(image_bytes):
     """Search similar images using SerpApi (Google Lens)."""
-    api_key = os.environ.get('SERPAPI_KEY')
-    endpoint = os.environ.get('SERPAPI_ENDPOINT', 'https://serpapi.com/search')
+    api_key = get_setting('SERPAPI_KEY')
+    endpoint = get_setting('SERPAPI_ENDPOINT', 'https://serpapi.com/search')
     if not api_key:
         return []
 
@@ -67,7 +84,7 @@ def search_image_serpapi(image_bytes):
 
 def search_image(image_bytes):
     """Call the configured external API to search for similar images."""
-    if os.environ.get('SERPAPI_KEY'):
+    if get_setting('SERPAPI_KEY'):
         return search_image_serpapi(image_bytes)
     return search_image_bing(image_bytes)
 

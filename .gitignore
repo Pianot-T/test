@@ -1,0 +1,4 @@
+# Ignore environment and config files containing secrets
+.env
+config.py
+__pycache__/
