@@ -111,4 +111,10 @@ def search():
     return jsonify(results)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    host = os.environ.get('HOST', '127.0.0.1')
+    port = int(os.environ.get('PORT', 5000))
+    use_https = os.environ.get('HTTPS') == '1'
+    if use_https:
+        app.run(host=host, port=port, debug=True, ssl_context='adhoc')
+    else:
+        app.run(host=host, port=port, debug=True)
