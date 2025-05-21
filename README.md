@@ -43,6 +43,26 @@ opens your default browser automatically:
 python run_webapp.py
 ```
 
+### Using a custom local domain
+
+If you want to access the web app with a custom name such as
+`https://recherche-image.com`, map this domain to your machine in your
+`/etc/hosts` file:
+
+```bash
+127.0.0.1 recherche-image.com
+```
+
+Run the server with HTTPS enabled:
+
+```bash
+HOST=0.0.0.0 PORT=5000 HTTPS=1 python webapp/server.py
+```
+
+Then open `https://recherche-image.com:5000` in your browser. The Flask
+development server uses a self-signed certificate, so your browser may display a
+warning that you need to accept.
+
 ## Limitations
 
 - This project uses an external API for image search. You may need to sign up for a key. Free tiers may have usage limits.
