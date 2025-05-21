@@ -9,6 +9,9 @@
 <body>
     <div class="container">
         <h1>Recherche d'images similaires</h1>
+        <div id="api-status" class="api-status {% if api_active %}active{% else %}inactive{% endif %}">
+            {% if api_active %}API activée{% else %}API non activée{% endif %}
+        </div>
         <form id="upload-form" enctype="multipart/form-data">
             <input type="file" name="image" id="image-input" accept="image/*" required>
             <button type="submit">Rechercher</button>

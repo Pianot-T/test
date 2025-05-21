@@ -10,7 +10,11 @@ This project provides a simple web interface to upload an image and search for s
 pip install -r requirements.txt
 ```
 
-2. Export your API credentials. You can configure either Bing Visual Search or SerpApi:
+2. Provide your API credentials. You can configure either Bing Visual Search or SerpApi. There are two ways to supply the keys:
+
+   * **Environment variables** (existing behaviour)
+   * **Configuration file**: copy `config_example.py` to `config.py` and edit it with your credentials. This file is ignored by git.
+   * **.env file**: create a `.env` file with the same variables if you prefer keeping them outside the code.
 
 ```bash
 # For Bing
